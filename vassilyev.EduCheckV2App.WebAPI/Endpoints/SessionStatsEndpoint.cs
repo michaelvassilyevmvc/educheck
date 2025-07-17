@@ -8,7 +8,7 @@ namespace vassilyev.EduCheckV2App.WebAPI.Endpoints;
 
 public class SessionStatsEndpoint : CarterModule
 {
-    public SessionStatsEndpoint() : base("api/sessionStats")
+    public SessionStatsEndpoint() : base("api/sessionstats")
     {
     }
 

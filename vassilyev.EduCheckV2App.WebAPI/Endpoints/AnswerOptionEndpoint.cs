@@ -8,7 +8,7 @@ namespace vassilyev.EduCheckV2App.WebAPI.Endpoints;
 
 public class AnswerOptionEndpoint : CarterModule
 {
-    public AnswerOptionEndpoint() : base("api/answerOptions")
+    public AnswerOptionEndpoint() : base("api/answeroptions")
     {
     }
 
