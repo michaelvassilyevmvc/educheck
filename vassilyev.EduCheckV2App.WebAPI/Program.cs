@@ -16,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddCarter();
 builder.Services.AddScoped<IRepository<User>, UserRepository>();
 builder.Services.AddScoped<IRepository<Question>, QuestionRepository>();
+builder.Services.AddScoped<IRepository<Topic>, TopicRepository>();
+builder.Services.AddScoped<IRepository<AnswerOption>, AnswerOptionRepository>();
 
 var app = builder.Build();
 
