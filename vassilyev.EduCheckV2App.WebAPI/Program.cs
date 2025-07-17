@@ -18,6 +18,7 @@ builder.Services.AddScoped<IRepository<User>, UserRepository>();
 builder.Services.AddScoped<IRepository<Question>, QuestionRepository>();
 builder.Services.AddScoped<IRepository<Topic>, TopicRepository>();
 builder.Services.AddScoped<IRepository<AnswerOption>, AnswerOptionRepository>();
+builder.Services.AddScoped<IRepository<SessionStats>, SessionStatsRepository>();
 
 var app = builder.Build();
 
@@ -27,6 +28,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.MapCarter();
-app.MapGet("/hello", () => "Hello World!");
 
 app.Run();
