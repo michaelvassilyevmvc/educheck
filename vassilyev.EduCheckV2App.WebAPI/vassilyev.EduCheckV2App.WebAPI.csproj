@@ -10,4 +10,10 @@
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.2"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Update="Program.cs">
+        <DependentUpon>appsettings.Development.json</DependentUpon>
+      </Compile>
+    </ItemGroup>
+
 </Project>
