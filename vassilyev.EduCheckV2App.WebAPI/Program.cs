@@ -9,5 +9,6 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.MapGet("/hello", () => "Hello World!");
 
 app.Run();
