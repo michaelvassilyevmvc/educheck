@@ -20,10 +20,7 @@ public class UserRepository: IRepository<User>
 
     public async Task<User> GetAsync(Guid id) => await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id);
 
-    public async Task<User> GetAsync(string userName)
-    {
-        return await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Login.ToLower() == userName.ToLower());
-    }
+    public async Task<User> GetAsync(string login) => await _db.Users.AsNoTracking().FirstOrDefaultAsync(x => x.Login.ToLower() == login.ToLower());
 
     public async Task CreateAsync(User user)
     {
