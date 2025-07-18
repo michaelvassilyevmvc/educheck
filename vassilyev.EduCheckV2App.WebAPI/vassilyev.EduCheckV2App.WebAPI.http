@@ -1,6 +1,14 @@
 @api_host = http://localhost:5000
 
-GET {{api_host}}/api/user
+GET {{api_host}}/api/users
 Accept: application/json
 
 ###
+
+DELETE {{api_host}}/api/users
+Content-Type: application/json
+
+{
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "verificationPassword": "your_password_123!"
+}

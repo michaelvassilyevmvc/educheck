@@ -21,19 +21,26 @@ public class UserEndpoint : CarterModule
         // GET
         app.MapGet("/", GetAll)
             .WithName("GetUsers")
-            .Produces<User>(201);
-        
+            .Produces<APIResponse>(201);
+
         // GET by ID
         app.MapGet("/{id:guid}", GetById)
             .WithName("GetById")
-            .Produces<User>(201);
-        
+            .Produces<APIResponse>(201);
+
         // POST
         app.MapPost("/", CreateUser)
             .WithName("CreateUser")
             .Produces<APIResponse>(StatusCodes.Status201Created)
             .ProducesValidationProblem()
             .Produces(StatusCodes.Status409Conflict);
+
+        // DELETE
+        app.MapDelete("/{id:guid}", DeleteUser)
+            .WithName("DeleteUser")
+            .ProducesValidationProblem()
+            .Produces<APIResponse>(StatusCodes.Status204NoContent)
+            .Produces(StatusCodes.Status401Unauthorized);
     }
 
     private static async Task<IResult> GetAll(IRepository<User> _repo, ILogger<Program> _logger)
@@ -45,7 +52,7 @@ public class UserEndpoint : CarterModule
         response.StatusCode = HttpStatusCode.OK;
         return Results.Ok(response);
     }
-    
+
     private static async Task<IResult> GetById(IRepository<User> _repo, ILogger<Program> _logger, Guid id)
     {
         APIResponse response = new();
@@ -55,7 +62,7 @@ public class UserEndpoint : CarterModule
         response.StatusCode = HttpStatusCode.OK;
         return Results.Ok(response);
     }
-    
+
     private static async Task<IResult> CreateUser(IRepository<User> _repo, IMapper _mapper,
         IValidator<UserCreateDto> _validation,
         [FromBody] UserCreateDto userCreateDto)
@@ -92,6 +99,47 @@ public class UserEndpoint : CarterModule
         response.Result = userDto;
         response.IsSuccess = true;
         response.StatusCode = HttpStatusCode.Created;
+        return Results.Ok(response);
+    }
+
+    private static async Task<IResult> DeleteUser(IRepository<User> _repo, ILogger<Program> _logger,
+        IValidator<UserDeleteDto> _validation, [FromBody] UserDeleteDto userDeleteDto, Guid Id)
+    {
+        APIResponse response = new()
+        {
+            IsSuccess = false,
+            StatusCode = HttpStatusCode.BadRequest,
+        };
+        
+        var validationResult = await _validation.ValidateAsync(userDeleteDto);
+        if (!validationResult.IsValid)
+        {
+            response.ErrorMessages.Add(validationResult.Errors.FirstOrDefault()
+                .ToString());
+            return Results.BadRequest(response);
+        }
+        
+        var user = await _repo.GetAsync(Id);
+        if (user is null)
+        {
+            return Results.NotFound(new APIResponse
+            {
+                IsSuccess = false,
+                StatusCode = HttpStatusCode.NotFound,
+                ErrorMessages = { $"User with ID {Id} not found" }
+            });
+        }
+        
+        if (!BCrypt.Net.BCrypt.Verify(userDeleteDto.VerificationPassword, user.PasswordHash))
+        {
+            return Results.Unauthorized();
+        }
+
+        _repo.Remove(user);
+        await _repo.SaveAsync();
+
+        response.IsSuccess = true;
+        response.StatusCode = HttpStatusCode.OK;
         return Results.Ok(response);
     }
 }
