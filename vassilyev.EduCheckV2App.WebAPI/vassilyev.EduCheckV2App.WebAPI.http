@@ -12,3 +12,13 @@ Content-Type: application/json
   "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   "verificationPassword": "your_password_123!"
 }
+
+###
+
+PUT /api/users/3fa85f64-5717-4562-b3fc-2c963f66afa6
+Content-Type: application/json
+
+{
+  "newLogin": "updated_username",
+  "newPassword": "NewP@ssw0rd123"
+}
